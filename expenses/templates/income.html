@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Income</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f6f5fb;
+            color: #333;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            width: 240px;
+            height: 100vh;
+
+            background: #6d28d9;
+
+            padding: 25px 15px;
+
+            color: white;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo h1 {
+            font-size: 22px;
+        }
+
+        .logo p {
+            font-size: 12px;
+            opacity: .8;
+            margin-top: 5px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu a {
+            color: white;
+            text-decoration: none;
+
+            padding: 13px 15px;
+
+            border-radius: 9px;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: #4c1d95;
+        }
+
+        .logout {
+            position: absolute;
+
+            bottom: 25px;
+
+            left: 15px;
+            right: 15px;
+        }
+
+        .logout a {
+            display: block;
+
+            text-align: center;
+
+            padding: 12px;
+
+            background: #dc2626;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 9px;
+        }
+
+        .main {
+            margin-left: 240px;
+
+            padding: 35px;
+        }
+
+        .top {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 30px;
+        }
+
+        .top h2 {
+            color: #4c1d95;
+
+            font-size: 28px;
+        }
+
+        .user {
+            background: white;
+
+            padding: 10px 16px;
+
+            border-radius: 10px;
+
+            color: #6d28d9;
+
+            font-weight: bold;
+
+            box-shadow:
+                0 4px 15px
+                rgba(0,0,0,.06);
+        }
+
+        /* TOTAL INCOME */
+
+        .income-total {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,.07);
+
+            margin-bottom: 25px;
+        }
+
+        .income-total p {
+            color: #777;
+
+            margin-bottom: 10px;
+        }
+
+        .income-total h1 {
+            color: #16a34a;
+
+            font-size: 32px;
+        }
+
+        /* ADD BUTTON */
+
+        .add-btn {
+            display: inline-block;
+
+            background: #2563eb;
+
+            color: white;
+
+            text-decoration: none;
+
+            padding: 12px 20px;
+
+            border-radius: 9px;
+
+            font-weight: bold;
+
+            margin-bottom: 25px;
+        }
+
+        .add-btn:hover {
+            background: #1d4ed8;
+        }
+
+        /* TABLE */
+
+        .section {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,.07);
+        }
+
+        .section h3 {
+            color: #4c1d95;
+
+            margin-bottom: 20px;
+        }
+
+        .income-table {
+            width: 100%;
+
+            border-collapse: collapse;
+        }
+
+        .income-table th {
+            background: #eff6ff;
+
+            color: #1d4ed8;
+
+            text-align: left;
+
+            padding: 13px;
+        }
+
+        .income-table td {
+            padding: 13px;
+
+            border-top:
+                1px solid #eee;
+        }
+
+        .income-amount {
+            color: #16a34a;
+
+            font-weight: bold;
+        }
+
+        /* DELETE */
+
+        .delete-btn {
+            display: inline-block;
+
+            background: #fee2e2;
+
+            color: #dc2626;
+
+            padding: 8px 12px;
+
+            border-radius: 7px;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            border: 1px solid #fecaca;
+        }
+
+        .delete-btn:hover {
+            background: #dc2626;
+
+            color: white;
+        }
+
+        .empty {
+            text-align: center;
+
+            padding: 30px;
+
+            color: #999;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                position: relative;
+
+                width: 100%;
+
+                height: auto;
+            }
+
+            .logout {
+                position: static;
+
+                margin-top: 20px;
+            }
+
+            .main {
+                margin-left: 0;
+
+                padding: 20px;
+            }
+
+            .top {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+            .income-table {
+                font-size: 13px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <h1>
+            💕 Our Expenses
+        </h1>
+
+        <p>
+            Couple Expense Tracker
+        </p>
+
+    </div>
+
+
+    <nav class="menu">
+
+        <a href="{% url 'dashboard' %}">
+            🏠 Dashboard
+        </a>
+
+        <a href="{% url 'expenses' %}">
+            💸 Expenses
+        </a>
+
+        <a href="{% url 'add_expense' %}">
+            ➕ Add Expense
+        </a>
+
+        <a
+            href="{% url 'income' %}"
+            class="active"
+        >
+            💰 Income
+        </a>
+
+        <a href="{% url 'add_income' %}">
+            ➕ Add Income
+        </a>
+
+        <a href="#">
+            📊 Monthly Progress
+        </a>
+
+        <a href="#">
+            📈 Charts
+        </a>
+
+    </nav>
+
+
+    <div class="logout">
+
+        <a href="{% url 'logout' %}">
+            🚪 Logout
+        </a>
+
+    </div>
+
+</aside>
+
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+
+    <div class="top">
+
+        <div>
+
+            <h2>
+                💰 Income
+            </h2>
+
+            <p>
+                Track your income together ❤️
+            </p>
+
+        </div>
+
+
+        <div class="user">
+
+            👤 {{ request.user.username }}
+
+        </div>
+
+    </div>
+
+
+
+    <!-- TOTAL INCOME -->
+
+    <div class="income-total">
+
+        <p>
+            Total Income
+        </p>
+
+        <h1>
+            ₹{{ total_income|default:"0" }}
+        </h1>
+
+    </div>
+
+
+
+    <!-- ADD INCOME -->
+
+    <a
+        href="{% url 'add_income' %}"
+        class="add-btn"
+    >
+        ➕ Add Income
+    </a>
+
+
+
+    <!-- INCOME LIST -->
+
+    <div class="section">
+
+        <h3>
+            💰 Income History
+        </h3>
+
+
+        {% if income_list %}
+
+        <table class="income-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Date
+                    </th>
+
+                    <th>
+                        Description
+                    </th>
+
+                    <th>
+                        Amount
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for item in income_list %}
+
+                <tr>
+
+                    <td>
+                        {{ item.date }}
+                    </td>
+
+                    <td>
+                        {{ item.description|default:"-" }}
+                    </td>
+
+                    <td class="income-amount">
+                        + ₹{{ item.amount }}
+                    </td>
+
+                    <td>
+
+                        <a
+                            href="{% url 'delete_income' item.id %}"
+                            class="delete-btn"
+                            onclick="return confirm('Delete this income?');"
+                        >
+                            🗑 Delete
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+
+        {% else %}
+
+        <div class="empty">
+
+            No income added yet.
+
+            <br><br>
+
+            Click
+            <strong>Add Income</strong>
+            to add your first income.
+
+        </div>
+
+        {% endif %}
+
+
+    </div>
+
+
+</main>
+
+
+</body>
+
+</html>

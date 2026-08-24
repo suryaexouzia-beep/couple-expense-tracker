@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expenses</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .buttons {
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            margin-right: 10px;
+            text-decoration: none;
+            border-radius: 8px;
+            color: white;
+            background: #6c63ff;
+        }
+
+        .category {
+            display: inline-block;
+            background: #eee;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 20px;
+        }
+
+        .expense {
+            background: #fafafa;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 10px;
+        }
+
+        .delete {
+            color: red;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>💰 My Expenses</h1>
+
+    <div class="buttons">
+
+        <a href="{% url 'add_expense' %}" class="btn">
+            ➕ Add Expense
+        </a>
+
+        <a href="{% url 'add_category' %}" class="btn">
+            📂 Add Category
+        </a>
+
+        <a href="{% url 'dashboard' %}" class="btn">
+            🏠 Dashboard
+        </a>
+
+    </div>
+
+
+    <!-- CATEGORIES -->
+
+    <h2>📂 My Categories</h2>
+
+    <div>
+
+        {% for category in categories %}
+
+            <span class="category">
+                🏷️ {{ category.name }}
+            </span>
+
+        {% empty %}
+
+            <p>No categories yet.</p>
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- EXPENSE LIST -->
+
+    <h2>📋 Expense History</h2>
+
+    {% for expense in expense_list %}
+
+        <div class="expense">
+
+            <strong>
+                {{ expense.category.name }}
+            </strong>
+
+            <br>
+
+            💵 ₹{{ expense.amount }}
+
+            <br>
+
+            📅 {{ expense.date }}
+
+            {% if expense.description %}
+                <br>
+                📝 {{ expense.description }}
+            {% endif %}
+
+            <br><br>
+
+            <a
+                href="{% url 'delete_expense' expense.id %}"
+                class="delete"
+                onclick="return confirm('Delete this expense?');"
+            >
+                🗑️ Delete
+            </a>
+
+        </div>
+
+    {% empty %}
+
+        <p>No expenses added yet.</p>
+
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

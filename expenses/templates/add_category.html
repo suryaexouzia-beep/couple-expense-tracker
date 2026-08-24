@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Category - Our Expenses</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f6f5fb;
+            color: #333;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            width: 240px;
+            height: 100vh;
+
+            background: linear-gradient(
+                180deg,
+                #6d28d9,
+                #4c1d95
+            );
+
+            color: white;
+
+            padding: 25px 15px;
+
+            display: flex;
+            flex-direction: column;
+
+            z-index: 1000;
+
+            box-shadow:
+                4px 0 15px rgba(0, 0, 0, 0.08);
+        }
+
+        /* ================= LOGO ================= */
+
+        .logo {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo h1 {
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+
+        .logo p {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* ================= MENU ================= */
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+
+            padding: 13px 15px;
+
+            color: white;
+            text-decoration: none;
+
+            border-radius: 9px;
+
+            font-size: 15px;
+
+            transition: all 0.3s ease;
+        }
+
+        .menu a:hover {
+            background: rgba(
+                255,
+                255,
+                255,
+                0.15
+            );
+
+            transform: translateX(4px);
+        }
+
+        .menu a.active {
+            background: #4c1d95;
+
+            box-shadow:
+                0 4px 10px
+                rgba(0, 0, 0, 0.15);
+        }
+
+        /* ================= LOGOUT ================= */
+
+        .logout {
+            margin-top: auto;
+        }
+
+        .logout a {
+            display: block;
+
+            text-align: center;
+
+            padding: 12px;
+
+            background: #dc2626;
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 9px;
+
+            font-weight: bold;
+
+            transition: all 0.3s ease;
+        }
+
+        .logout a:hover {
+            background: #b91c1c;
+
+            transform: translateY(-2px);
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 240px;
+
+            min-height: 100vh;
+
+            padding: 40px;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: flex-start;
+
+            overflow-y: auto;
+        }
+
+        /* ================= FORM CARD ================= */
+
+        .form-card {
+            width: 100%;
+
+            max-width: 600px;
+
+            background: white;
+
+            padding: 35px;
+
+            border-radius: 18px;
+
+            border: 1px solid #eee;
+
+            box-shadow:
+                0 8px 30px
+                rgba(0, 0, 0, 0.08);
+
+            animation: fadeIn 0.4s ease;
+        }
+
+        /* ================= ANIMATION ================= */
+
+        @keyframes fadeIn {
+
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+        /* ================= TITLE ================= */
+
+        .form-card h2 {
+            color: #4c1d95;
+
+            font-size: 28px;
+
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #777;
+
+            font-size: 14px;
+
+            margin-bottom: 30px;
+        }
+
+        /* ================= MESSAGES ================= */
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            padding: 12px 15px;
+
+            border-radius: 8px;
+
+            margin-bottom: 10px;
+
+            font-size: 14px;
+
+            font-weight: 500;
+        }
+
+        .success {
+            background: #dcfce7;
+
+            color: #166534;
+
+            border-left:
+                4px solid #16a34a;
+        }
+
+        .error {
+            background: #fee2e2;
+
+            color: #991b1b;
+
+            border-left:
+                4px solid #dc2626;
+        }
+
+        .warning {
+            background: #fef3c7;
+
+            color: #92400e;
+
+            border-left:
+                4px solid #f59e0b;
+        }
+
+        .info {
+            background: #dbeafe;
+
+            color: #1e40af;
+
+            border-left:
+                4px solid #2563eb;
+        }
+
+        /* ================= FORM ================= */
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #4c1d95;
+
+            font-weight: bold;
+
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+
+            padding: 14px 15px;
+
+            border: 1px solid #ddd;
+
+            border-radius: 9px;
+
+            font-size: 15px;
+
+            outline: none;
+
+            background: white;
+
+            color: #333;
+
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:hover {
+            border-color: #a78bfa;
+        }
+
+        .form-group input:focus {
+            border-color: #7c3aed;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(
+                    124,
+                    58,
+                    237,
+                    0.12
+                );
+        }
+
+        .form-group input::placeholder {
+            color: #aaa;
+        }
+
+        /* ================= BUTTONS ================= */
+
+        .buttons {
+            display: flex;
+
+            gap: 12px;
+
+            margin-top: 28px;
+        }
+
+        .btn {
+            flex: 1;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            text-decoration: none;
+
+            text-align: center;
+
+            cursor: pointer;
+
+            transition: all 0.3s ease;
+        }
+
+        /* SAVE */
+
+        .save-btn {
+            background: #7c3aed;
+
+            color: white;
+
+            box-shadow:
+                0 4px 10px
+                rgba(
+                    124,
+                    58,
+                    237,
+                    0.20
+                );
+        }
+
+        .save-btn:hover {
+            background: #6d28d9;
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 6px 15px
+                rgba(
+                    124,
+                    58,
+                    237,
+                    0.30
+                );
+        }
+
+        /* CANCEL */
+
+        .cancel-btn {
+            background: #f1f1f1;
+
+            color: #444;
+        }
+
+        .cancel-btn:hover {
+            background: #e2e2e2;
+
+            transform: translateY(-2px);
+        }
+
+        /* ================= SCROLLBAR ================= */
+
+        .main::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .main::-webkit-scrollbar-track {
+            background: #eee;
+        }
+
+        .main::-webkit-scrollbar-thumb {
+            background: #7c3aed;
+
+            border-radius: 10px;
+        }
+
+        .main::-webkit-scrollbar-thumb:hover {
+            background: #4c1d95;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                position: relative;
+
+                width: 100%;
+
+                height: auto;
+
+                min-height: auto;
+            }
+
+            .logo {
+                margin-bottom: 20px;
+            }
+
+            .menu {
+                flex-direction: row;
+
+                flex-wrap: wrap;
+
+                justify-content: center;
+            }
+
+            .menu a {
+                padding: 10px 12px;
+
+                font-size: 14px;
+            }
+
+            .logout {
+                margin-top: 20px;
+            }
+
+            .main {
+                margin-left: 0;
+
+                padding: 20px;
+
+                min-height: auto;
+            }
+
+            .form-card {
+                padding: 25px;
+
+                max-width: 100%;
+            }
+
+            .form-card h2 {
+                font-size: 24px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        /* ================= SMALL MOBILE ================= */
+
+        @media (max-width: 450px) {
+
+            .main {
+                padding: 15px;
+            }
+
+            .form-card {
+                padding: 20px;
+
+                border-radius: 14px;
+            }
+
+            .menu {
+                flex-direction: column;
+            }
+
+            .menu a {
+                width: 100%;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar">
+
+
+    <!-- LOGO -->
+
+    <div class="logo">
+
+        <h1>
+            💕 Our Expenses
+        </h1>
+
+        <p>
+            Couple Expense Tracker
+        </p>
+
+    </div>
+
+
+    <!-- MENU -->
+
+    <nav class="menu">
+
+        <a href="{% url 'dashboard' %}">
+            🏠 Dashboard
+        </a>
+
+        <a
+            href="{% url 'expenses' %}"
+            class="active"
+        >
+            💸 Expenses
+        </a>
+
+        <a href="{% url 'income' %}">
+            💰 Income
+        </a>
+
+    </nav>
+
+
+    <!-- LOGOUT -->
+
+    <div class="logout">
+
+        <a href="{% url 'logout' %}">
+            🚪 Logout
+        </a>
+
+    </div>
+
+
+</aside>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+
+    <div class="form-card">
+
+
+        <!-- TITLE -->
+
+        <h2>
+            🏷️ Add Category
+        </h2>
+
+        <p class="subtitle">
+            Create a new expense category.
+        </p>
+
+
+        <!-- =================================================
+             MESSAGES
+        ================================================= -->
+
+        {% if messages %}
+
+            <div class="messages">
+
+                {% for message in messages %}
+
+                    <div class="message {{ message.tags }}">
+
+                        {{ message }}
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             FORM
+        ================================================= -->
+
+        <form
+            method="POST"
+            action="{% url 'add_category' %}"
+        >
+
+            {% csrf_token %}
+
+
+            <!-- CATEGORY NAME -->
+
+            <div class="form-group">
+
+                <label for="name">
+                    Category Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Example: Food, Travel, Shopping..."
+                    maxlength="100"
+                    required
+                    autofocus
+                >
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="buttons">
+
+
+                <button
+                    type="submit"
+                    class="btn save-btn"
+                >
+
+                    💾 Add Category
+
+                </button>
+
+
+                <a
+                    href="{% url 'expenses' %}"
+                    class="btn cancel-btn"
+                >
+
+                    Cancel
+
+                </a>
+
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+
+</main>
+
+
+</body>
+
+</html>

@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Our Expenses - Dashboard</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f6f5fb;
+            color: #333;
+            overflow: hidden;
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+            position: fixed;
+
+            left: 0;
+            top: 0;
+
+            width: 240px;
+            height: 100vh;
+
+            background: #6d28d9;
+            color: white;
+
+            padding: 25px 15px;
+
+            display: flex;
+            flex-direction: column;
+
+            overflow-y: auto;
+
+            z-index: 1000;
+        }
+
+
+        /* Sidebar scrollbar */
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: #5b21b6;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #c4b5fd;
+            border-radius: 10px;
+        }
+
+
+        /* =====================================================
+           LOGO
+        ===================================================== */
+
+        .logo {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo h1 {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+
+        /* =====================================================
+           MENU
+        ===================================================== */
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu a {
+            display: block;
+
+            padding: 13px 15px;
+
+            color: white;
+            text-decoration: none;
+
+            border-radius: 9px;
+
+            font-size: 15px;
+
+            transition: 0.3s;
+        }
+
+        .menu a:hover {
+            background: #5b21b6;
+        }
+
+        .menu a.active {
+            background: #4c1d95;
+        }
+
+
+        /* =====================================================
+           LOGOUT
+        ===================================================== */
+
+        .logout {
+            margin-top: auto;
+            padding-top: 20px;
+        }
+
+        .logout a {
+            display: block;
+
+            text-align: center;
+
+            padding: 12px;
+
+            background: #dc2626;
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 9px;
+
+            font-weight: bold;
+
+            transition: 0.3s;
+        }
+
+        .logout a:hover {
+            background: #b91c1c;
+        }
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .main {
+            position: fixed;
+
+            left: 240px;
+            top: 0;
+
+            width: calc(100% - 240px);
+            height: 100vh;
+
+            padding: 35px;
+
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+
+        /* =====================================================
+           MAIN SCROLLBAR
+        ===================================================== */
+
+        .main::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .main::-webkit-scrollbar-track {
+            background: #e5e7eb;
+        }
+
+        .main::-webkit-scrollbar-thumb {
+            background: #6d28d9;
+            border-radius: 10px;
+        }
+
+        .main::-webkit-scrollbar-thumb:hover {
+            background: #4c1d95;
+        }
+
+
+        /* Firefox */
+
+        .main {
+            scrollbar-width: auto;
+            scrollbar-color: #6d28d9 #e5e7eb;
+        }
+
+
+        /* =====================================================
+           TOP
+        ===================================================== */
+
+        .top {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 30px;
+        }
+
+        .top h2 {
+            color: #4c1d95;
+            font-size: 28px;
+        }
+
+        .top p {
+            color: #777;
+            margin-top: 5px;
+        }
+
+        .user {
+            background: white;
+
+            padding: 10px 16px;
+
+            border-radius: 10px;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.06);
+
+            color: #6d28d9;
+
+            font-weight: bold;
+        }
+
+
+        /* =====================================================
+           SUMMARY CARDS
+        ===================================================== */
+
+        .cards {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 30px;
+
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,0.07);
+
+            min-height: 135px;
+
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.10);
+        }
+
+        .card-title {
+            color: #777;
+
+            font-size: 14px;
+
+            margin-bottom: 15px;
+        }
+
+        .amount {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .balance {
+            color: #16a34a;
+        }
+
+        .income {
+            color: #2563eb;
+        }
+
+        .expense {
+            color: #dc2626;
+        }
+
+
+        /* =====================================================
+           GRID
+        ===================================================== */
+
+        .grid {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 30px;
+
+            margin-bottom: 30px;
+        }
+
+
+        /* =====================================================
+           SECTION
+        ===================================================== */
+
+        .section {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,0.07);
+
+            margin-bottom: 30px;
+        }
+
+        .section h3 {
+            color: #4c1d95;
+
+            margin-bottom: 20px;
+        }
+
+
+        /* =====================================================
+           PROGRESS
+        ===================================================== */
+
+        .progress-info {
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-bottom: 10px;
+
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            width: 100%;
+
+            height: 15px;
+
+            background: #eee;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #7c3aed,
+                    #a855f7
+                );
+
+            border-radius: 20px;
+
+            min-width: 0;
+        }
+
+        .progress-text {
+            margin-top: 12px;
+
+            color: #777;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           CHART
+        ===================================================== */
+
+        .chart {
+            height: 230px;
+
+            display: flex;
+
+            align-items: flex-end;
+
+            justify-content: space-around;
+
+            padding-top: 20px;
+        }
+
+        .bar-container {
+            height: 190px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: flex-end;
+
+            align-items: center;
+
+            gap: 8px;
+        }
+
+        .bar {
+            width: 35px;
+
+            background: #7c3aed;
+
+            border-radius:
+                7px 7px 0 0;
+        }
+
+        .bar-label {
+            font-size: 12px;
+
+            color: #777;
+        }
+
+
+        /* =====================================================
+           TRANSACTIONS
+        ===================================================== */
+
+        .transactions {
+            width: 100%;
+
+            border-collapse: collapse;
+        }
+
+        .transactions th {
+            text-align: left;
+
+            background: #f5f3ff;
+
+            color: #4c1d95;
+
+            padding: 13px;
+        }
+
+        .transactions td {
+            padding: 13px;
+
+            border-top:
+                1px solid #eee;
+        }
+
+        .amount-red {
+            color: #dc2626;
+
+            font-weight: bold;
+        }
+
+        .amount-blue {
+            color: #2563eb;
+
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+
+            padding: 25px;
+
+            color: #999;
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 200px;
+            }
+
+            .main {
+                left: 200px;
+
+                width: calc(100% - 200px);
+
+                padding: 25px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+
+        @media (max-width: 600px) {
+
+            body {
+                overflow: auto;
+            }
+
+            .sidebar {
+                position: relative;
+
+                width: 100%;
+
+                height: auto;
+
+                overflow: visible;
+            }
+
+            .main {
+                position: relative;
+
+                left: 0;
+                top: 0;
+
+                width: 100%;
+                height: auto;
+
+                padding: 20px;
+
+                overflow: visible;
+            }
+
+            .top {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+
+                gap: 15px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+
+                gap: 15px;
+            }
+
+            .transactions {
+                font-size: 13px;
+            }
+
+            .transactions th,
+            .transactions td {
+                padding: 9px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <h1>
+            💕 Our Expenses
+        </h1>
+
+        <p>
+            Couple Expense Tracker
+        </p>
+
+    </div>
+
+
+    <nav class="menu">
+
+        <a
+            href="{% url 'dashboard' %}"
+            class="active"
+        >
+            🏠 Dashboard
+        </a>
+
+
+        <a href="{% url 'expenses' %}">
+            💸 Expenses
+        </a>
+
+
+        <a href="{% url 'income' %}">
+            💰 Income
+        </a>
+
+
+        <a href="#">
+            📊 Monthly Progress
+        </a>
+
+
+        <a href="#">
+            📈 Charts
+        </a>
+
+    </nav>
+
+
+    <!-- LOGOUT -->
+
+    <div class="logout">
+
+        <a href="{% url 'logout' %}">
+            🚪 Logout
+        </a>
+
+    </div>
+
+</aside>
+
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+
+    <!-- =================================================
+         TOP
+    ================================================= -->
+
+    <div class="top">
+
+        <div>
+
+            <h2>
+                Dashboard
+            </h2>
+
+            <p>
+                Manage your money together ❤️
+            </p>
+
+        </div>
+
+
+        <div class="user">
+
+            👤 {{ request.user.username }}
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         SUMMARY CARDS
+    ================================================= -->
+
+    <div class="cards">
+
+
+        <!-- BALANCE -->
+
+        <div class="card">
+
+            <div class="card-title">
+                💳 Total Balance
+            </div>
+
+            <div class="amount balance">
+
+                ₹{{ total_balance|default:"0" }}
+
+            </div>
+
+        </div>
+
+
+        <!-- INCOME -->
+
+        <div class="card">
+
+            <div class="card-title">
+                💰 Total Income
+            </div>
+
+            <div class="amount income">
+
+                ₹{{ total_income|default:"0" }}
+
+            </div>
+
+        </div>
+
+
+        <!-- EXPENSE -->
+
+        <div class="card">
+
+            <div class="card-title">
+                💸 Total Expense
+            </div>
+
+            <div class="amount expense">
+
+                ₹{{ total_expenses|default:"0" }}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         MONTHLY PROGRESS + OVERVIEW
+    ================================================= -->
+
+    <div class="grid">
+
+
+        <!-- MONTHLY PROGRESS -->
+
+        <div class="section">
+
+            <h3>
+                📊 Monthly Progress
+            </h3>
+
+
+            <div class="progress-info">
+
+                <span>
+                    This Month
+                </span>
+
+                <span>
+                    ₹{{ current_month_expense|default:"0" }}
+                </span>
+
+            </div>
+
+
+            <div class="progress-bar">
+
+                {% if current_month_income > 0 %}
+
+                    <div
+                        class="progress"
+                        style="
+                            width:
+                            {% widthratio current_month_expense current_month_income 100 %}%;
+                        "
+                    ></div>
+
+                {% else %}
+
+                    <div
+                        class="progress"
+                        style="width: 0%;"
+                    ></div>
+
+                {% endif %}
+
+            </div>
+
+
+            <p class="progress-text">
+
+                {% if current_month_expense > 0 %}
+
+                    This month expenses:
+                    ₹{{ current_month_expense }}
+
+                    <br>
+
+                    This month income:
+                    ₹{{ current_month_income }}
+
+                {% else %}
+
+                    No expenses recorded this month.
+
+                {% endif %}
+
+            </p>
+
+        </div>
+
+
+
+        <!-- MONTHLY OVERVIEW -->
+
+        <div class="section">
+
+            <h3>
+                📈 Monthly Overview
+            </h3>
+
+
+            <div class="chart">
+
+
+                <div class="bar-container">
+
+                    <div
+                        class="bar"
+                        style="height:20px;"
+                    ></div>
+
+                    <span class="bar-label">
+                        Jan
+                    </span>
+
+                </div>
+
+
+                <div class="bar-container">
+
+                    <div
+                        class="bar"
+                        style="height:40px;"
+                    ></div>
+
+                    <span class="bar-label">
+                        Feb
+                    </span>
+
+                </div>
+
+
+                <div class="bar-container">
+
+                    <div
+                        class="bar"
+                        style="height:65px;"
+                    ></div>
+
+                    <span class="bar-label">
+                        Mar
+                    </span>
+
+                </div>
+
+
+                <div class="bar-container">
+
+                    <div
+                        class="bar"
+                        style="height:90px;"
+                    ></div>
+
+                    <span class="bar-label">
+                        Apr
+                    </span>
+
+                </div>
+
+
+                <div class="bar-container">
+
+                    <div
+                        class="bar"
+                        style="height:55px;"
+                    ></div>
+
+                    <span class="bar-label">
+                        May
+                    </span>
+
+                </div>
+
+
+                <div class="bar-container">
+
+                    <div
+                        class="bar"
+                        style="height:75px;"
+                    ></div>
+
+                    <span class="bar-label">
+                        Jun
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         RECENT TRANSACTIONS
+    ================================================= -->
+
+    <div class="section">
+
+        <h3>
+            💳 Recent Transactions
+        </h3>
+
+
+        {% if expense_list %}
+
+            <table class="transactions">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Category
+                        </th>
+
+                        <th>
+                            Description
+                        </th>
+
+                        <th>
+                            Amount
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for expense in expense_list %}
+
+                        <tr>
+
+                            <td>
+                                {{ expense.date }}
+                            </td>
+
+
+                            <td>
+
+                                {% if expense.category %}
+
+                                    {{ expense.category.name }}
+
+                                {% else %}
+
+                                    -
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {{ expense.description|default:"-" }}
+
+                            </td>
+
+
+                            <td class="amount-red">
+
+                                - ₹{{ expense.amount }}
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+
+        {% else %}
+
+            <div class="empty">
+
+                No transactions yet.
+
+                <br><br>
+
+                Add your first income or expense.
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+</main>
+
+
+</body>
+
+</html>
