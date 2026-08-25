@@ -3,7 +3,7 @@ from . import views
 
 
 urlpatterns = [
-
+path("setup-admin/", views.setup_admin),
     # Dashboard
     path(
         "",

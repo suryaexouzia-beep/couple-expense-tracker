@@ -3,12 +3,7 @@ from django.urls import include, path
 from expenses import views
 
 urlpatterns = [
-
-    path(
-        "admin/",
-        admin.site.urls
-    ),
-
+path("setup-admin/", views.setup_admin),
     path(
         "",
         views.login_view,
@@ -31,7 +26,7 @@ urlpatterns = [
         views.income,
         name="income"
     ),
-
+    path("dashboard/", views.dashboard, name="dashboard"),
     path(
         "logout/",
         views.logout_view,

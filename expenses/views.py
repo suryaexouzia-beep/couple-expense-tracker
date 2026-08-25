@@ -8,7 +8,17 @@ from django.db.models import Sum
 from datetime import date
 
 from .models import Expense, Category, Income
+from django.contrib.auth.models import User
 
+def setup_admin(request):
+    user = User.objects.get(username="surya")
+
+    user.is_staff = True
+    user.is_superuser = True
+    user.set_password("YourNewPassword123")
+    user.save()
+
+    return redirect("/admin/")
 
 # =====================================================
 # LOGIN
