@@ -119,17 +119,15 @@ ROOT_URLCONF = "expense_project.urls"
 # ============================================================
 # TEMPLATES
 # ============================================================
-
 TEMPLATES = [
-
     {
-        "BACKEND":
-            "django.template.backends.django.DjangoTemplates",
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
 
-        "DIRS": [],
+        "DIRS": [
+            BASE_DIR / "templates",
+        ],
 
         "APP_DIRS": True,
-
         "OPTIONS": {
 
             "context_processors": [
@@ -327,3 +325,4 @@ if not DEBUG:
     SECURE_CONTENT_TYPE_NOSNIFF = True
 
     X_FRAME_OPTIONS = "DENY"
+

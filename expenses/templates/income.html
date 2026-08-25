@@ -10,7 +10,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Income</title>
+    <title>Income | Our Expenses</title>
 
     <style>
 
@@ -21,93 +21,230 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background: #f6f5fb;
-            color: #333;
+            font-family:
+                Inter,
+                Arial,
+                sans-serif;
+
+            background: #f8f7fc;
+
+            color: #1f2937;
         }
 
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
         .sidebar {
+
             position: fixed;
+
             left: 0;
             top: 0;
 
-            width: 240px;
+            width: 245px;
             height: 100vh;
 
-            background: #6d28d9;
-
-            padding: 25px 15px;
+            background:
+                linear-gradient(
+                    180deg,
+                    #7c3aed,
+                    #5b21b6
+                );
 
             color: white;
+
+            padding: 28px 16px;
+
+            display: flex;
+            flex-direction: column;
+
+            z-index: 100;
         }
 
+
         .logo {
+
             text-align: center;
+
             margin-bottom: 35px;
         }
 
-        .logo h1 {
-            font-size: 22px;
+
+        .logo-icon {
+
+            width: 52px;
+            height: 52px;
+
+            margin: auto;
+            margin-bottom: 12px;
+
+            background: rgba(255,255,255,.18);
+
+            border-radius: 16px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 25px;
         }
 
+
+        .logo h1 {
+
+            font-size: 20px;
+
+            font-weight: 700;
+        }
+
+
         .logo p {
-            font-size: 12px;
-            opacity: .8;
+
+            font-size: 11px;
+
+            opacity: .75;
+
             margin-top: 5px;
         }
 
+
         .menu {
+
             display: flex;
+
             flex-direction: column;
-            gap: 8px;
+
+            gap: 7px;
         }
+
+
+        .menu-title {
+
+            font-size: 10px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+
+            opacity: .55;
+
+            padding: 8px 14px 5px;
+        }
+
 
         .menu a {
-            color: white;
+
+            color: rgba(255,255,255,.88);
+
             text-decoration: none;
 
-            padding: 13px 15px;
+            padding: 12px 14px;
 
-            border-radius: 9px;
+            border-radius: 10px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+
+            font-size: 14px;
+
+            transition: .2s;
         }
 
-        .menu a:hover,
+
+        .menu a:hover {
+
+            background:
+                rgba(255,255,255,.13);
+
+            color: white;
+
+            transform: translateX(2px);
+        }
+
+
         .menu a.active {
-            background: #4c1d95;
+
+            background: white;
+
+            color: #6d28d9;
+
+            font-weight: 700;
+
+            box-shadow:
+                0 5px 15px
+                rgba(0,0,0,.12);
         }
+
 
         .logout {
-            position: absolute;
 
-            bottom: 25px;
-
-            left: 15px;
-            right: 15px;
+            margin-top: auto;
         }
 
-        .logout a {
-            display: block;
 
-            text-align: center;
+        .logout a {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 8px;
 
             padding: 12px;
 
-            background: #dc2626;
+            border-radius: 10px;
+
+            background:
+                rgba(220,38,38,.18);
+
+            border:
+                1px solid
+                rgba(255,255,255,.12);
 
             color: white;
 
             text-decoration: none;
 
-            border-radius: 9px;
+            font-size: 14px;
+
+            transition: .2s;
         }
+
+
+        .logout a:hover {
+
+            background: #dc2626;
+        }
+
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
 
         .main {
-            margin-left: 240px;
 
-            padding: 35px;
+            margin-left: 245px;
+
+            padding: 35px 40px;
+
+            min-height: 100vh;
         }
 
+
+        /* =====================================================
+           TOP HEADER
+        ===================================================== */
+
         .top {
+
             display: flex;
 
             justify-content: space-between;
@@ -117,60 +254,222 @@
             margin-bottom: 30px;
         }
 
-        .top h2 {
-            color: #4c1d95;
 
-            font-size: 28px;
+        .page-title h2 {
+
+            font-size: 30px;
+
+            color: #312e81;
+
+            margin-bottom: 6px;
         }
 
+
+        .page-title p {
+
+            color: #6b7280;
+
+            font-size: 14px;
+        }
+
+
         .user {
+
             background: white;
 
             padding: 10px 16px;
 
-            border-radius: 10px;
+            border-radius: 12px;
 
             color: #6d28d9;
 
-            font-weight: bold;
+            font-size: 14px;
+
+            font-weight: 700;
 
             box-shadow:
                 0 4px 15px
                 rgba(0,0,0,.06);
+
+            border:
+                1px solid #eee;
         }
 
-        /* TOTAL INCOME */
+
+
+        /* =====================================================
+           SUMMARY CARD
+        ===================================================== */
+
+        .summary-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1fr)
+                220px;
+
+            gap: 20px;
+
+            margin-bottom: 28px;
+        }
+
 
         .income-total {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ecfdf5,
+                    #d1fae5
+                );
+
+            border:
+                1px solid #bbf7d0;
+
+            border-radius: 18px;
+
+            padding: 27px;
+
+            position: relative;
+
+            overflow: hidden;
+        }
+
+
+        .income-total::after {
+
+            content: "₹";
+
+            position: absolute;
+
+            right: 25px;
+            top: 5px;
+
+            font-size: 100px;
+
+            font-weight: bold;
+
+            color: #16a34a;
+
+            opacity: .08;
+        }
+
+
+        .income-total .label {
+
+            color: #166534;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            margin-bottom: 8px;
+        }
+
+
+        .income-total h1 {
+
+            color: #15803d;
+
+            font-size: 35px;
+
+            position: relative;
+
+            z-index: 1;
+        }
+
+
+        .income-total small {
+
+            display: block;
+
+            margin-top: 8px;
+
+            color: #4d7c5a;
+
+            font-size: 12px;
+        }
+
+
+        /* =====================================================
+           ADD INCOME CARD
+        ===================================================== */
+
+        .add-card {
+
             background: white;
 
-            padding: 25px;
+            border-radius: 18px;
 
-            border-radius: 15px;
+            padding: 20px;
+
+            border:
+                1px solid #eee;
 
             box-shadow:
                 0 5px 20px
-                rgba(0,0,0,.07);
+                rgba(0,0,0,.05);
 
-            margin-bottom: 25px;
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+            align-items: center;
+
+            text-align: center;
         }
 
-        .income-total p {
-            color: #777;
+
+        .add-card-icon {
+
+            width: 45px;
+            height: 45px;
+
+            border-radius: 12px;
+
+            background: #eff6ff;
+
+            color: #2563eb;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
 
             margin-bottom: 10px;
         }
 
-        .income-total h1 {
-            color: #16a34a;
 
-            font-size: 32px;
+        .add-card p {
+
+            font-size: 12px;
+
+            color: #6b7280;
+
+            margin-bottom: 12px;
         }
 
-        /* ADD BUTTON */
 
         .add-btn {
-            display: inline-block;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 7px;
+
+            width: 100%;
+
+            padding: 11px 15px;
+
+            border-radius: 9px;
 
             background: #2563eb;
 
@@ -178,129 +477,373 @@
 
             text-decoration: none;
 
-            padding: 12px 20px;
+            font-size: 13px;
 
-            border-radius: 9px;
+            font-weight: 700;
 
-            font-weight: bold;
-
-            margin-bottom: 25px;
+            transition: .2s;
         }
+
 
         .add-btn:hover {
+
             background: #1d4ed8;
+
+            transform: translateY(-1px);
         }
 
-        /* TABLE */
+
+
+        /* =====================================================
+           HISTORY SECTION
+        ===================================================== */
 
         .section {
+
             background: white;
 
-            padding: 25px;
+            border-radius: 18px;
 
-            border-radius: 15px;
+            border:
+                1px solid #eee;
 
             box-shadow:
                 0 5px 20px
-                rgba(0,0,0,.07);
+                rgba(0,0,0,.05);
+
+            overflow: hidden;
         }
 
-        .section h3 {
-            color: #4c1d95;
 
-            margin-bottom: 20px;
+        .section-header {
+
+            padding: 22px 25px;
+
+            border-bottom:
+                1px solid #f0f0f0;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
         }
+
+
+        .section-header h3 {
+
+            color: #312e81;
+
+            font-size: 17px;
+        }
+
+
+        .section-header span {
+
+            font-size: 12px;
+
+            color: #9ca3af;
+        }
+
+
+        /* =====================================================
+           TABLE
+        ===================================================== */
+
+        .table-wrapper {
+
+            overflow-x: auto;
+        }
+
 
         .income-table {
+
             width: 100%;
 
             border-collapse: collapse;
+
+            min-width: 650px;
         }
 
-        .income-table th {
-            background: #eff6ff;
 
-            color: #1d4ed8;
+        .income-table th {
+
+            background: #fafafa;
+
+            color: #6b7280;
 
             text-align: left;
 
-            padding: 13px;
+            padding: 14px 20px;
+
+            font-size: 11px;
+
+            text-transform: uppercase;
+
+            letter-spacing: .5px;
         }
+
 
         .income-table td {
-            padding: 13px;
+
+            padding: 17px 20px;
 
             border-top:
-                1px solid #eee;
+                1px solid #f1f1f1;
+
+            font-size: 14px;
         }
+
+
+        .income-table tbody tr {
+
+            transition: .15s;
+        }
+
+
+        .income-table tbody tr:hover {
+
+            background: #fafaff;
+        }
+
+
+        .date-cell {
+
+            color: #6b7280;
+
+            font-size: 13px;
+        }
+
+
+        .description-cell {
+
+            color: #374151;
+
+            font-weight: 500;
+        }
+
 
         .income-amount {
+
             color: #16a34a;
 
-            font-weight: bold;
+            font-weight: 700;
+
+            font-size: 15px;
         }
 
-        /* DELETE */
 
-        .delete-btn {
+        .amount-badge {
+
             display: inline-block;
 
-            background: #fee2e2;
+            background: #ecfdf5;
+
+            color: #15803d;
+
+            padding: 6px 10px;
+
+            border-radius: 7px;
+        }
+
+
+        /* =====================================================
+           DELETE
+        ===================================================== */
+
+        .delete-btn {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 5px;
+
+            background: #fff1f2;
 
             color: #dc2626;
 
-            padding: 8px 12px;
+            padding: 7px 11px;
 
             border-radius: 7px;
 
             text-decoration: none;
 
-            font-size: 13px;
+            font-size: 12px;
 
-            font-weight: bold;
+            font-weight: 600;
 
-            border: 1px solid #fecaca;
+            border:
+                1px solid #fecdd3;
+
+            transition: .2s;
         }
 
+
         .delete-btn:hover {
+
             background: #dc2626;
 
             color: white;
+
+            border-color: #dc2626;
         }
+
+
+        /* =====================================================
+           EMPTY STATE
+        ===================================================== */
 
         .empty {
+
             text-align: center;
 
-            padding: 30px;
+            padding: 65px 20px;
 
-            color: #999;
+            color: #9ca3af;
         }
 
-        /* MOBILE */
 
-        @media (max-width: 700px) {
+        .empty-icon {
+
+            width: 65px;
+            height: 65px;
+
+            margin: auto;
+
+            margin-bottom: 15px;
+
+            background: #f3f4f6;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 27px;
+        }
+
+
+        .empty h4 {
+
+            color: #4b5563;
+
+            margin-bottom: 7px;
+
+            font-size: 16px;
+        }
+
+
+        .empty p {
+
+            font-size: 13px;
+
+            margin-bottom: 18px;
+        }
+
+
+        .empty .empty-add {
+
+            display: inline-block;
+
+            padding: 10px 17px;
+
+            background: #2563eb;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 8px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+        }
+
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 850px) {
 
             .sidebar {
+
                 position: relative;
 
                 width: 100%;
 
                 height: auto;
+
+                padding: 18px;
             }
+
+
+            .logo {
+
+                margin-bottom: 15px;
+            }
+
+
+            .logo-icon {
+
+                display: none;
+            }
+
+
+            .menu {
+
+                flex-direction: row;
+
+                flex-wrap: wrap;
+            }
+
+
+            .menu-title {
+
+                display: none;
+            }
+
+
+            .menu a {
+
+                padding: 9px 11px;
+
+                font-size: 12px;
+            }
+
 
             .logout {
-                position: static;
 
-                margin-top: 20px;
+                margin-top: 15px;
             }
+
 
             .main {
+
                 margin-left: 0;
 
-                padding: 20px;
+                padding: 25px 18px;
             }
 
+
+            .summary-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
             .top {
+
                 flex-direction: column;
 
                 align-items: flex-start;
@@ -308,8 +851,24 @@
                 gap: 15px;
             }
 
-            .income-table {
-                font-size: 13px;
+
+            .user {
+
+                width: 100%;
+
+                text-align: center;
+            }
+
+
+            .page-title h2 {
+
+                font-size: 25px;
+            }
+
+
+            .income-total h1 {
+
+                font-size: 29px;
             }
 
         }
@@ -322,14 +881,21 @@
 <body>
 
 
-<!-- SIDEBAR -->
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
 
 <aside class="sidebar">
 
+
     <div class="logo">
 
+        <div class="logo-icon">
+            💕
+        </div>
+
         <h1>
-            💕 Our Expenses
+            Our Expenses
         </h1>
 
         <p>
@@ -341,35 +907,46 @@
 
     <nav class="menu">
 
+        <div class="menu-title">
+            Main Menu
+        </div>
+
+
         <a href="{% url 'dashboard' %}">
-            🏠 Dashboard
+            🏠
+            <span>Dashboard</span>
         </a>
+
 
         <a href="{% url 'expenses' %}">
-            💸 Expenses
+            💸
+            <span>Expenses</span>
         </a>
 
+
         <a href="{% url 'add_expense' %}">
-            ➕ Add Expense
+            ➕
+            <span>Add Expense</span>
         </a>
+
+
+        <div class="menu-title">
+            Income
+        </div>
+
 
         <a
             href="{% url 'income' %}"
             class="active"
         >
-            💰 Income
+            💰
+            <span>Income</span>
         </a>
+
 
         <a href="{% url 'add_income' %}">
-            ➕ Add Income
-        </a>
-
-        <a href="#">
-            📊 Monthly Progress
-        </a>
-
-        <a href="#">
-            📈 Charts
+            ➕
+            <span>Add Income</span>
         </a>
 
     </nav>
@@ -378,7 +955,8 @@
     <div class="logout">
 
         <a href="{% url 'logout' %}">
-            🚪 Logout
+            🚪
+            Logout
         </a>
 
     </div>
@@ -387,21 +965,25 @@
 
 
 
-<!-- MAIN -->
+<!-- =====================================================
+     MAIN CONTENT
+===================================================== -->
 
 <main class="main">
 
 
+    <!-- HEADER -->
+
     <div class="top">
 
-        <div>
+        <div class="page-title">
 
             <h2>
                 💰 Income
             </h2>
 
             <p>
-                Track your income together ❤️
+                Keep track of your income together ❤️
             </p>
 
         </div>
@@ -417,123 +999,219 @@
 
 
 
-    <!-- TOTAL INCOME -->
+    <!-- =================================================
+         SUMMARY
+    ================================================== -->
 
-    <div class="income-total">
+    <div class="summary-grid">
 
-        <p>
-            Total Income
-        </p>
 
-        <h1>
-            ₹{{ total_income|default:"0" }}
-        </h1>
+        <!-- TOTAL -->
+
+        <div class="income-total">
+
+            <div class="label">
+                TOTAL INCOME
+            </div>
+
+            <h1>
+                ₹{{ total_income|default:"0" }}
+            </h1>
+
+            <small>
+                💚 Your combined recorded income
+            </small>
+
+        </div>
+
+
+        <!-- ADD -->
+
+        <div class="add-card">
+
+            <div class="add-card-icon">
+                💰
+            </div>
+
+            <p>
+                Received new income?
+            </p>
+
+            <a
+                href="{% url 'add_income' %}"
+                class="add-btn"
+            >
+                ➕ Add Income
+            </a>
+
+        </div>
+
 
     </div>
 
 
 
-    <!-- ADD INCOME -->
-
-    <a
-        href="{% url 'add_income' %}"
-        class="add-btn"
-    >
-        ➕ Add Income
-    </a>
-
-
-
-    <!-- INCOME LIST -->
+    <!-- =================================================
+         HISTORY
+    ================================================== -->
 
     <div class="section">
 
-        <h3>
-            💰 Income History
-        </h3>
+
+        <div class="section-header">
+
+            <h3>
+                💰 Income History
+            </h3>
+
+            <span>
+                {{ income_list|length }} record{{ income_list|length|pluralize }}
+            </span>
+
+        </div>
 
 
         {% if income_list %}
 
-        <table class="income-table">
 
-            <thead>
+        <div class="table-wrapper">
 
-                <tr>
-
-                    <th>
-                        Date
-                    </th>
-
-                    <th>
-                        Description
-                    </th>
-
-                    <th>
-                        Amount
-                    </th>
-
-                    <th>
-                        Action
-                    </th>
-
-                </tr>
-
-            </thead>
+            <table class="income-table">
 
 
-            <tbody>
+                <thead>
 
-                {% for item in income_list %}
+                    <tr>
 
-                <tr>
+                        <th>
+                            Date
+                        </th>
 
-                    <td>
-                        {{ item.date }}
-                    </td>
+                        <th>
+                            Description
+                        </th>
 
-                    <td>
-                        {{ item.description|default:"-" }}
-                    </td>
+                        <th>
+                            Amount
+                        </th>
 
-                    <td class="income-amount">
-                        + ₹{{ item.amount }}
-                    </td>
+                        <th>
+                            Action
+                        </th>
 
-                    <td>
+                    </tr>
 
-                        <a
-                            href="{% url 'delete_income' item.id %}"
-                            class="delete-btn"
-                            onclick="return confirm('Delete this income?');"
-                        >
-                            🗑 Delete
-                        </a>
+                </thead>
 
-                    </td>
 
-                </tr>
+                <tbody>
 
-                {% endfor %}
 
-            </tbody>
+                    {% for item in income_list %}
 
-        </table>
+                    <tr>
+
+
+                        <td class="date-cell">
+
+                            📅
+
+                            {{ item.date|date:"d M Y" }}
+
+                        </td>
+
+
+                        <td class="description-cell">
+
+                            {% if item.description %}
+
+                                {{ item.description }}
+
+                            {% else %}
+
+                                <span style="color:#9ca3af;">
+                                    No description
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td class="income-amount">
+
+                            <span class="amount-badge">
+
+                                + ₹{{ item.amount }}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <a
+                                href="{% url 'delete_income' item.id %}"
+                                class="delete-btn"
+
+                                onclick="
+                                    return confirm(
+                                        'Are you sure you want to delete this income?'
+                                    );
+                                "
+                            >
+
+                                🗑
+
+                                Delete
+
+                            </a>
+
+                        </td>
+
+
+                    </tr>
+
+                    {% endfor %}
+
+
+                </tbody>
+
+
+            </table>
+
+        </div>
 
 
         {% else %}
 
+
+        <!-- EMPTY -->
+
         <div class="empty">
 
-            No income added yet.
+            <div class="empty-icon">
+                💰
+            </div>
 
-            <br><br>
+            <h4>
+                No income yet
+            </h4>
 
-            Click
-            <strong>Add Income</strong>
-            to add your first income.
+            <p>
+                Add your first income record to start tracking.
+            </p>
+
+            <a
+                href="{% url 'add_income' %}"
+                class="empty-add"
+            >
+                ➕ Add Your First Income
+            </a>
 
         </div>
+
 
         {% endif %}
 

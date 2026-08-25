@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Charts | Our Expenses</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f6f5fb;
+            color: #333;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            width: 240px;
+            height: 100vh;
+
+            background: #6d28d9;
+            color: white;
+
+            padding: 25px 15px;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo h1 {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            font-size: 12px;
+            opacity: .8;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu a {
+            display: block;
+
+            padding: 13px 15px;
+
+            color: white;
+            text-decoration: none;
+
+            border-radius: 9px;
+
+            font-size: 15px;
+        }
+
+        .menu a:hover {
+            background: #5b21b6;
+        }
+
+        .menu a.active {
+            background: #4c1d95;
+        }
+
+        .logout {
+            margin-top: auto;
+        }
+
+        .logout a {
+            display: block;
+
+            text-align: center;
+
+            padding: 12px;
+
+            background: #dc2626;
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 9px;
+
+            font-weight: bold;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 240px;
+
+            padding: 35px;
+
+            min-height: 100vh;
+        }
+
+        .top {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 30px;
+        }
+
+        .top h2 {
+            color: #4c1d95;
+
+            font-size: 28px;
+        }
+
+        .top p {
+            color: #777;
+
+            margin-top: 5px;
+        }
+
+        .user {
+            background: white;
+
+            padding: 10px 16px;
+
+            border-radius: 10px;
+
+            color: #6d28d9;
+
+            font-weight: bold;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,.06);
+        }
+
+        /* SUMMARY */
+
+        .cards {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 25px;
+
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,.07);
+        }
+
+        .card p {
+            color: #777;
+
+            font-size: 14px;
+
+            margin-bottom: 12px;
+        }
+
+        .card h2 {
+            font-size: 28px;
+        }
+
+        .income {
+            color: #16a34a;
+        }
+
+        .expense {
+            color: #dc2626;
+        }
+
+        .balance {
+            color: #2563eb;
+        }
+
+        /* CHART SECTION */
+
+        .section {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,.07);
+
+            margin-bottom: 30px;
+        }
+
+        .section h3 {
+            color: #4c1d95;
+
+            margin-bottom: 8px;
+        }
+
+        .section p {
+            color: #888;
+
+            font-size: 13px;
+
+            margin-bottom: 25px;
+        }
+
+        /* BAR CHART */
+
+        .chart {
+            height: 300px;
+
+            display: flex;
+
+            align-items: flex-end;
+
+            justify-content: space-around;
+
+            gap: 20px;
+
+            border-bottom: 1px solid #ddd;
+
+            padding: 20px 10px 0;
+        }
+
+        .month {
+            flex: 1;
+
+            height: 100%;
+
+            display: flex;
+
+            align-items: flex-end;
+
+            justify-content: center;
+
+            gap: 6px;
+
+            position: relative;
+        }
+
+        .bar {
+            width: 25px;
+
+            border-radius:
+                6px 6px 0 0;
+        }
+
+        .income-bar {
+            background: #22c55e;
+        }
+
+        .expense-bar {
+            background: #ef4444;
+        }
+
+        .month-label {
+            position: absolute;
+
+            bottom: -25px;
+
+            font-size: 12px;
+
+            color: #666;
+        }
+
+        /* LEGEND */
+
+        .legend {
+            display: flex;
+
+            justify-content: center;
+
+            gap: 25px;
+
+            margin-top: 40px;
+        }
+
+        .legend-item {
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            font-size: 13px;
+
+            color: #666;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+
+            border-radius: 50%;
+        }
+
+        .green {
+            background: #22c55e;
+        }
+
+        .red {
+            background: #ef4444;
+        }
+
+        /* INFO */
+
+        .info {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 25px;
+        }
+
+        .info-card {
+            background: #fafafa;
+
+            padding: 20px;
+
+            border-radius: 12px;
+
+            border: 1px solid #eee;
+        }
+
+        .info-card h4 {
+            color: #4c1d95;
+
+            margin-bottom: 10px;
+        }
+
+        .info-card p {
+            margin: 0;
+
+            line-height: 1.6;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                position: relative;
+
+                width: 100%;
+
+                height: auto;
+            }
+
+            .main {
+                margin-left: 0;
+
+                padding: 20px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .info {
+                grid-template-columns: 1fr;
+            }
+
+            .top {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <h1>
+            💕 Our Expenses
+        </h1>
+
+        <p>
+            Couple Expense Tracker
+        </p>
+
+    </div>
+
+
+
+    <div class="logout">
+
+        <a href="{% url 'logout' %}">
+            🚪 Logout
+        </a>
+
+    </div>
+
+</aside>
+
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+
+    <div class="top">
+
+        <div>
+
+            <h2>
+                📈 Charts
+            </h2>
+
+            <p>
+                Visual overview of your income and expenses ❤️
+            </p>
+
+        </div>
+
+
+        <div class="user">
+
+            👤 {{ request.user.username }}
+
+        </div>
+
+    </div>
+
+
+
+    <!-- SUMMARY -->
+
+    <div class="cards">
+
+        <div class="card">
+
+            <p>
+                💰 Total Income
+            </p>
+
+            <h2 class="income">
+                ₹{{ total_income|default:"0" }}
+            </h2>
+
+        </div>
+
+
+        <div class="card">
+
+            <p>
+                💸 Total Expenses
+            </p>
+
+            <h2 class="expense">
+                ₹{{ total_expenses|default:"0" }}
+            </h2>
+
+        </div>
+
+
+        <div class="card">
+
+            <p>
+                💳 Balance
+            </p>
+
+            <h2 class="balance">
+                ₹{{ total_balance|default:"0" }}
+            </h2>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- CHART -->
+
+    <div class="section">
+
+        <h3>
+            📊 Income vs Expenses
+        </h3>
+
+        <p>
+            Monthly comparison of your income and expenses
+        </p>
+
+
+        <div class="chart">
+
+
+            {% for month in monthly_data %}
+
+                <div class="month">
+
+
+                    {% if month.income > 0 %}
+
+                        <div
+                            class="bar income-bar"
+                            style="
+                                height:
+                                {% widthratio month.income max_value 250 %}px;
+                            "
+                            title="Income: ₹{{ month.income }}"
+                        ></div>
+
+                    {% else %}
+
+                        <div
+                            class="bar income-bar"
+                            style="height:2px;"
+                        ></div>
+
+                    {% endif %}
+
+
+                    {% if month.expense > 0 %}
+
+                        <div
+                            class="bar expense-bar"
+                            style="
+                                height:
+                                {% widthratio month.expense max_value 250 %}px;
+                            "
+                            title="Expense: ₹{{ month.expense }}"
+                        ></div>
+
+                    {% else %}
+
+                        <div
+                            class="bar expense-bar"
+                            style="height:2px;"
+                        ></div>
+
+                    {% endif %}
+
+
+                    <span class="month-label">
+
+                        {{ month.month }}
+
+                    </span>
+
+
+                </div>
+
+            {% endfor %}
+
+
+        </div>
+
+
+        <div class="legend">
+
+            <div class="legend-item">
+
+                <span class="dot green"></span>
+
+                Income
+
+            </div>
+
+
+            <div class="legend-item">
+
+                <span class="dot red"></span>
+
+                Expenses
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- INFORMATION -->
+
+    <div class="info">
+
+
+        <div class="info-card">
+
+            <h4>
+                💚 Income
+            </h4>
+
+            <p>
+                Total income:
+                <strong>
+                    ₹{{ total_income|default:"0" }}
+                </strong>
+            </p>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <h4>
+                ❤️ Expenses
+            </h4>
+
+            <p>
+                Total expenses:
+                <strong>
+                    ₹{{ total_expenses|default:"0" }}
+                </strong>
+            </p>
+
+        </div>
+
+    </div>
+
+
+</main>
+
+
+</body>
+
+</html>

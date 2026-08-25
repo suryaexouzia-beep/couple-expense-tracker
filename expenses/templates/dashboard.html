@@ -29,14 +29,12 @@
             overflow: hidden;
         }
 
-
         /* =====================================================
            SIDEBAR
         ===================================================== */
 
         .sidebar {
             position: fixed;
-
             left: 0;
             top: 0;
 
@@ -56,9 +54,6 @@
             z-index: 1000;
         }
 
-
-        /* Sidebar scrollbar */
-
         .sidebar::-webkit-scrollbar {
             width: 6px;
         }
@@ -71,7 +66,6 @@
             background: #c4b5fd;
             border-radius: 10px;
         }
-
 
         /* =====================================================
            LOGO
@@ -91,7 +85,6 @@
             font-size: 12px;
             opacity: 0.8;
         }
-
 
         /* =====================================================
            MENU
@@ -126,7 +119,6 @@
             background: #4c1d95;
         }
 
-
         /* =====================================================
            LOGOUT
         ===================================================== */
@@ -159,7 +151,6 @@
             background: #b91c1c;
         }
 
-
         /* =====================================================
            MAIN
         ===================================================== */
@@ -179,11 +170,6 @@
             overflow-x: hidden;
         }
 
-
-        /* =====================================================
-           MAIN SCROLLBAR
-        ===================================================== */
-
         .main::-webkit-scrollbar {
             width: 12px;
         }
@@ -201,14 +187,10 @@
             background: #4c1d95;
         }
 
-
-        /* Firefox */
-
         .main {
             scrollbar-width: auto;
             scrollbar-color: #6d28d9 #e5e7eb;
         }
-
 
         /* =====================================================
            TOP
@@ -247,7 +229,6 @@
 
             font-weight: bold;
         }
-
 
         /* =====================================================
            SUMMARY CARDS
@@ -311,7 +292,6 @@
             color: #dc2626;
         }
 
-
         /* =====================================================
            GRID
         ===================================================== */
@@ -325,7 +305,6 @@
 
             margin-bottom: 30px;
         }
-
 
         /* =====================================================
            SECTION
@@ -350,6 +329,37 @@
             margin-bottom: 20px;
         }
 
+        /* =====================================================
+           MONTHLY LINKS
+        ===================================================== */
+
+        .monthly-link {
+            color: #4c1d95;
+
+            text-decoration: none;
+
+            transition: 0.2s;
+        }
+
+        .monthly-link:hover {
+            color: #7c3aed;
+
+            text-decoration: underline;
+        }
+
+        .charts-link {
+            color: #4c1d95;
+
+            text-decoration: none;
+
+            transition: 0.2s;
+        }
+
+        .charts-link:hover {
+            color: #7c3aed;
+
+            text-decoration: underline;
+        }
 
         /* =====================================================
            PROGRESS
@@ -402,7 +412,6 @@
             line-height: 1.7;
         }
 
-
         /* =====================================================
            CHART
         ===================================================== */
@@ -440,6 +449,12 @@
 
             border-radius:
                 7px 7px 0 0;
+
+            transition: 0.3s;
+        }
+
+        .bar:hover {
+            background: #5b21b6;
         }
 
         .bar-label {
@@ -447,7 +462,6 @@
 
             color: #777;
         }
-
 
         /* =====================================================
            TRANSACTIONS
@@ -496,7 +510,6 @@
             color: #999;
         }
 
-
         /* =====================================================
            MOBILE
         ===================================================== */
@@ -523,7 +536,6 @@
                 grid-template-columns: 1fr;
             }
         }
-
 
         @media (max-width: 600px) {
 
@@ -583,6 +595,7 @@
             .transactions td {
                 padding: 9px;
             }
+
         }
 
     </style>
@@ -614,6 +627,8 @@
 
     <nav class="menu">
 
+        <!-- Dashboard -->
+
         <a
             href="{% url 'dashboard' %}"
             class="active"
@@ -622,22 +637,30 @@
         </a>
 
 
+        <!-- Expenses -->
+
         <a href="{% url 'expenses' %}">
             💸 Expenses
         </a>
 
+
+        <!-- Income -->
 
         <a href="{% url 'income' %}">
             💰 Income
         </a>
 
 
-        <a href="#">
+        <!-- Monthly Progress -->
+
+        <a href="{% url 'monthly_progress' %}">
             📊 Monthly Progress
         </a>
 
 
-        <a href="#">
+        <!-- Charts -->
+
+        <a href="{% url 'charts' %}">
             📈 Charts
         </a>
 
@@ -756,7 +779,7 @@
 
 
     <!-- =================================================
-         MONTHLY PROGRESS + OVERVIEW
+         MONTHLY PROGRESS + MONTHLY OVERVIEW
     ================================================= -->
 
     <div class="grid">
@@ -767,7 +790,14 @@
         <div class="section">
 
             <h3>
-                📊 Monthly Progress
+
+                <a
+                    href="{% url 'monthly_progress' %}"
+                    class="monthly-link"
+                >
+                    📊 Monthly Progress
+                </a>
+
             </h3>
 
 
@@ -788,19 +818,29 @@
 
                 {% if current_month_income > 0 %}
 
-                    <div
-                        class="progress"
-                        style="
-                            width:
-                            {% widthratio current_month_expense current_month_income 100 %}%;
-                        "
-                    ></div>
+                    {% widthratio current_month_expense current_month_income 100 as progress_width %}
+
+                    {% if progress_width > 100 %}
+
+                        <div
+                            class="progress"
+                            style="width:100%;"
+                        ></div>
+
+                    {% else %}
+
+                        <div
+                            class="progress"
+                            style="width:{{ progress_width }}%;"
+                        ></div>
+
+                    {% endif %}
 
                 {% else %}
 
                     <div
                         class="progress"
-                        style="width: 0%;"
+                        style="width:0%;"
                     ></div>
 
                 {% endif %}
@@ -826,18 +866,41 @@
 
                 {% endif %}
 
+                <br>
+                <br>
+
+                <a
+                    href="{% url 'monthly_progress' %}"
+                    style="
+                        color:#6d28d9;
+                        font-weight:bold;
+                        text-decoration:none;
+                    "
+                >
+                    View full monthly progress →
+                </a>
+
             </p>
 
         </div>
 
 
 
-        <!-- MONTHLY OVERVIEW -->
+        <!-- =================================================
+             MONTHLY OVERVIEW / CHARTS
+        ================================================= -->
 
         <div class="section">
 
             <h3>
-                📈 Monthly Overview
+
+                <a
+                    href="{% url 'charts' %}"
+                    class="charts-link"
+                >
+                    📈 Monthly Overview
+                </a>
+
             </h3>
 
 
@@ -927,6 +990,23 @@
 
                 </div>
 
+
+            </div>
+
+
+            <div style="text-align:center;">
+
+                <a
+                    href="{% url 'charts' %}"
+                    style="
+                        color:#6d28d9;
+                        font-weight:bold;
+                        text-decoration:none;
+                        font-size:13px;
+                    "
+                >
+                    View detailed charts →
+                </a>
 
             </div>
 
@@ -1030,7 +1110,8 @@
 
                 No transactions yet.
 
-                <br><br>
+                <br>
+                <br>
 
                 Add your first income or expense.
 

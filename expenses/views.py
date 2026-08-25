@@ -1,29 +1,27 @@
+from datetime import date
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
-from django.db.models import Sum
-
-from datetime import date
 
 from .models import Expense, Category, Income
-from django.contrib.auth.models import User
 
-def setup_admin(request):
-    user = User.objects.get(username="surya")
 
-    user.is_staff = True
-    user.is_superuser = True
-    user.set_password("YourNewPassword123")
-    user.save()
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
-    return redirect("/admin/")
+
 
 # =====================================================
 # LOGIN
 # =====================================================
-
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
 def login_view(request):
 
     if request.user.is_authenticated:
@@ -44,59 +42,138 @@ def login_view(request):
             login(request, user)
             return redirect("dashboard")
 
-        messages.error(
+        return render(
             request,
-            "Invalid username or password."
+            "login.html",
+            {
+                "error": "Invalid username or password"
+            }
         )
 
-    return render(request, "login.html")
-
-
-# =====================================================
-# DASHBOARD
-# =====================================================
-
-
-@login_required
-def dashboard(request):
-
-    expense_list = Expense.objects.filter(
-        paid_by=request.user
-    ).select_related(
-        "category"
-    ).order_by(
-        "-date",
-        "-created_at"
+    return render(
+        request,
+        "login.html"
     )
 
+
+def logout_view(request):
+
+    logout(request)
+
+    return redirect("login")
+@login_required
+def monthly_progress(request):
+
+    # All income
     income_list = Income.objects.filter(
         user=request.user
-    ).order_by(
-        "-date",
-        "-created_at"
+    )
+
+    # All expenses
+    expense_list = Expense.objects.filter(
+        paid_by=request.user
+    )
+
+    # Total values
+    total_income = sum(
+        item.amount for item in income_list
     )
 
     total_expenses = sum(
-        expense.amount for expense in expense_list
+        item.amount for item in expense_list
     )
 
-    total_income = sum(
-        income.amount for income in income_list
+    total_balance = (
+        total_income - total_expenses
     )
 
-    total_balance = total_income - total_expenses
-
-    # ==========================================
-    # CURRENT MONTH + PREVIOUS MONTHS OVERVIEW
-    # ==========================================
-
+    # Last 6 months
     today = timezone.localdate()
 
     monthly_data = []
 
     for i in range(6):
 
-        # Calculate month
+        month = today.month - i
+        year = today.year
+
+        while month <= 0:
+            month += 12
+            year -= 1
+
+        monthly_income = Income.objects.filter(
+            user=request.user,
+            date__year=year,
+            date__month=month
+        ).aggregate(
+            total=Sum("amount")
+        )["total"] or 0
+
+        monthly_expense = Expense.objects.filter(
+            paid_by=request.user,
+            date__year=year,
+            date__month=month
+        ).aggregate(
+            total=Sum("amount")
+        )["total"] or 0
+
+        monthly_data.append({
+            "month": date(
+                year,
+                month,
+                1
+            ).strftime("%b %Y"),
+
+            "income": monthly_income,
+
+            "expense": monthly_expense,
+        })
+
+    # Oldest → newest
+    monthly_data.reverse()
+
+    return render(
+        request,
+        "monthly_progress.html",
+        {
+            "monthly_data": monthly_data,
+
+            "total_income": total_income,
+
+            "total_expenses": total_expenses,
+
+            "total_balance": total_balance,
+        }
+    )
+@login_required
+def charts(request):
+
+    expense_list = Expense.objects.filter(
+        paid_by=request.user
+    )
+
+    income_list = Income.objects.filter(
+        user=request.user
+    )
+
+    total_expenses = sum(
+        expense.amount
+        for expense in expense_list
+    )
+
+    total_income = sum(
+        income.amount
+        for income in income_list
+    )
+
+    total_balance = total_income - total_expenses
+
+    monthly_data = []
+
+    today = timezone.localdate()
+
+    for i in range(6):
+
         month = today.month - i
         year = today.year
 
@@ -128,10 +205,116 @@ def dashboard(request):
             ).strftime("%b"),
 
             "income": monthly_income,
+
             "expense": monthly_expense,
         })
 
-    # Oldest → newest
+    monthly_data.reverse()
+
+    max_value = max(
+        [
+            max(
+                month["income"],
+                month["expense"]
+            )
+            for month in monthly_data
+        ] or [1]
+    )
+
+    if max_value == 0:
+        max_value = 1
+
+    return render(
+        request,
+        "charts.html",
+        {
+            "monthly_data": monthly_data,
+            "total_income": total_income,
+            "total_expenses": total_expenses,
+            "total_balance": total_balance,
+            "max_value": max_value,
+        }
+    )
+# =====================================================
+# DASHBOARD
+# =====================================================
+
+@login_required
+def dashboard(request):
+
+    expense_list = Expense.objects.filter(
+        paid_by=request.user
+    ).select_related(
+        "category"
+    ).order_by(
+        "-date",
+        "-created_at"
+    )
+
+    income_list = Income.objects.filter(
+        user=request.user
+    ).order_by(
+        "-date",
+        "-created_at"
+    )
+
+    total_expenses = sum(
+        expense.amount
+        for expense in expense_list
+    )
+
+    total_income = sum(
+        income.amount
+        for income in income_list
+    )
+
+    total_balance = total_income - total_expenses
+
+    # =================================================
+    # MONTHLY DATA - LAST 6 MONTHS
+    # =================================================
+
+    today = timezone.localdate()
+
+    monthly_data = []
+
+    for i in range(6):
+
+        month = today.month - i
+        year = today.year
+
+        while month <= 0:
+            month += 12
+            year -= 1
+
+        monthly_expense = Expense.objects.filter(
+            paid_by=request.user,
+            date__year=year,
+            date__month=month
+        ).aggregate(
+            total=Sum("amount")
+        )["total"] or 0
+
+        monthly_income = Income.objects.filter(
+            user=request.user,
+            date__year=year,
+            date__month=month
+        ).aggregate(
+            total=Sum("amount")
+        )["total"] or 0
+
+        monthly_data.append({
+            "month": date(
+                year,
+                month,
+                1
+            ).strftime("%b"),
+
+            "income": monthly_income,
+
+            "expense": monthly_expense,
+        })
+
     monthly_data.reverse()
 
     return render(
@@ -146,57 +329,12 @@ def dashboard(request):
             "monthly_data": monthly_data,
         }
     )
+
+
 # =====================================================
-# ADD CATEGORY
+# EXPENSES PAGE
 # =====================================================
 
-@login_required
-def add_category(request):
-
-    if request.method == "POST":
-
-        name = request.POST.get(
-            "name",
-            ""
-        ).strip()
-
-        if not name:
-
-            messages.error(
-                request,
-                "Please enter a category name."
-            )
-
-            return redirect("add_category")
-
-        if Category.objects.filter(
-            user=request.user,
-            name__iexact=name
-        ).exists():
-
-            messages.error(
-                request,
-                "This category already exists."
-            )
-
-            return redirect("expenses")
-
-        Category.objects.create(
-            user=request.user,
-            name=name
-        )
-
-        messages.success(
-            request,
-            "Category added successfully! ✅"
-        )
-
-        return redirect("expenses")
-
-    return render(
-        request,
-        "add_category.html"
-    )
 @login_required
 def expenses(request):
 
@@ -222,6 +360,66 @@ def expenses(request):
         }
     )
 
+
+# =====================================================
+# ADD CATEGORY
+# =====================================================
+
+@login_required
+def add_category(request):
+
+    if request.method == "POST":
+
+        name = request.POST.get(
+            "name",
+            ""
+        ).strip()
+
+        if not name:
+
+            messages.error(
+                request,
+                "Please enter a category name."
+            )
+
+            return redirect(
+                "add_category"
+            )
+
+        if Category.objects.filter(
+            user=request.user,
+            name__iexact=name
+        ).exists():
+
+            messages.error(
+                request,
+                "This category already exists."
+            )
+
+            return redirect(
+                "expenses"
+            )
+
+        Category.objects.create(
+            user=request.user,
+            name=name
+        )
+
+        messages.success(
+            request,
+            "Category added successfully! ✅"
+        )
+
+        return redirect(
+            "expenses"
+        )
+
+    return render(
+        request,
+        "add_category.html"
+    )
+
+
 # =====================================================
 # ADD EXPENSE
 # =====================================================
@@ -235,34 +433,55 @@ def add_expense(request):
 
     if request.method == "POST":
 
-        category_id = request.POST.get("category")
-        amount = request.POST.get("amount")
+        category_id = request.POST.get(
+            "category"
+        )
+
+        amount = request.POST.get(
+            "amount"
+        )
+
         description = request.POST.get(
             "description",
             ""
         ).strip()
-        date = request.POST.get("date")
+
+        expense_date = request.POST.get(
+            "date"
+        )
 
         if not category_id:
+
             messages.error(
                 request,
                 "Please select a category."
             )
-            return redirect("add_expense")
+
+            return redirect(
+                "add_expense"
+            )
 
         if not amount:
+
             messages.error(
                 request,
                 "Please enter an amount."
             )
-            return redirect("add_expense")
 
-        if not date:
+            return redirect(
+                "add_expense"
+            )
+
+        if not expense_date:
+
             messages.error(
                 request,
                 "Please select a date."
             )
-            return redirect("add_expense")
+
+            return redirect(
+                "add_expense"
+            )
 
         category = get_object_or_404(
             Category,
@@ -275,7 +494,7 @@ def add_expense(request):
             category=category,
             amount=amount,
             description=description,
-            date=date
+            date=expense_date
         )
 
         messages.success(
@@ -283,7 +502,9 @@ def add_expense(request):
             "Expense added successfully! 💸"
         )
 
-        return redirect("expenses")
+        return redirect(
+            "expenses"
+        )
 
     return render(
         request,
@@ -309,7 +530,8 @@ def income(request):
     )
 
     total_income = sum(
-        item.amount for item in income_list
+        item.amount
+        for item in income_list
     )
 
     return render(
@@ -331,32 +553,46 @@ def add_income(request):
 
     if request.method == "POST":
 
-        amount = request.POST.get("amount")
+        amount = request.POST.get(
+            "amount"
+        )
+
         description = request.POST.get(
             "description",
             ""
         ).strip()
-        date = request.POST.get("date")
+
+        income_date = request.POST.get(
+            "date"
+        )
 
         if not amount:
+
             messages.error(
                 request,
                 "Please enter an amount."
             )
-            return redirect("add_income")
 
-        if not date:
+            return redirect(
+                "add_income"
+            )
+
+        if not income_date:
+
             messages.error(
                 request,
                 "Please select a date."
             )
-            return redirect("add_income")
+
+            return redirect(
+                "add_income"
+            )
 
         Income.objects.create(
             user=request.user,
             amount=amount,
             description=description,
-            date=date
+            date=income_date
         )
 
         messages.success(
@@ -364,7 +600,9 @@ def add_income(request):
             "Income added successfully! 💰"
         )
 
-        return redirect("income")
+        return redirect(
+            "income"
+        )
 
     return render(
         request,
@@ -392,7 +630,9 @@ def delete_income(request, income_id):
         "Income deleted successfully."
     )
 
-    return redirect("income")
+    return redirect(
+        "income"
+    )
 
 
 # =====================================================
@@ -415,7 +655,9 @@ def delete_expense(request, expense_id):
         "Expense deleted successfully."
     )
 
-    return redirect("expenses")
+    return redirect(
+        "expenses"
+    )
 
 
 # =====================================================
@@ -426,4 +668,6 @@ def logout_view(request):
 
     logout(request)
 
-    return redirect("login")
+    return redirect(
+        "login"
+    )

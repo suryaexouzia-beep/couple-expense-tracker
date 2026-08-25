@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Monthly Progress | Our Expenses</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f7fc;
+            color: #1f2937;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            width: 245px;
+            height: 100vh;
+
+            background: linear-gradient(
+                180deg,
+                #7c3aed,
+                #5b21b6
+            );
+
+            color: white;
+            padding: 28px 16px;
+
+            display: flex;
+            flex-direction: column;
+
+            z-index: 100;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo-icon {
+            width: 52px;
+            height: 52px;
+
+            margin: auto;
+            margin-bottom: 12px;
+
+            background: rgba(255,255,255,.18);
+
+            border-radius: 16px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 25px;
+        }
+
+        .logo h1 {
+            font-size: 20px;
+        }
+
+        .logo p {
+            font-size: 11px;
+            opacity: .75;
+            margin-top: 5px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .menu-title {
+            font-size: 10px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+
+            opacity: .55;
+
+            padding: 8px 14px 5px;
+        }
+
+        .menu a {
+            color: rgba(255,255,255,.88);
+
+            text-decoration: none;
+
+            padding: 12px 14px;
+
+            border-radius: 10px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+
+            font-size: 14px;
+
+            transition: .2s;
+        }
+
+        .menu a:hover {
+            background: rgba(255,255,255,.13);
+            color: white;
+        }
+
+        .menu a.active {
+            background: white;
+            color: #6d28d9;
+
+            font-weight: 700;
+
+            box-shadow:
+                0 5px 15px
+                rgba(0,0,0,.12);
+        }
+
+        .logout {
+            margin-top: auto;
+        }
+
+        .logout a {
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 12px;
+
+            border-radius: 10px;
+
+            background: rgba(220,38,38,.18);
+
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 14px;
+        }
+
+        .logout a:hover {
+            background: #dc2626;
+        }
+
+
+        /* MAIN */
+
+        .main {
+            margin-left: 245px;
+            padding: 35px 40px;
+
+            min-height: 100vh;
+        }
+
+
+        /* HEADER */
+
+        .top {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 30px;
+        }
+
+        .page-title h2 {
+            font-size: 30px;
+            color: #312e81;
+
+            margin-bottom: 6px;
+        }
+
+        .page-title p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .user {
+            background: white;
+
+            padding: 10px 16px;
+
+            border-radius: 12px;
+
+            color: #6d28d9;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            box-shadow:
+                0 4px 15px
+                rgba(0,0,0,.06);
+        }
+
+
+        /* SUMMARY */
+
+        .summary {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 16px;
+
+            border: 1px solid #eee;
+
+            box-shadow:
+                0 5px 18px
+                rgba(0,0,0,.05);
+        }
+
+        .card p {
+            color: #6b7280;
+            font-size: 13px;
+
+            margin-bottom: 8px;
+        }
+
+        .card h2 {
+            font-size: 25px;
+        }
+
+        .income-card h2 {
+            color: #16a34a;
+        }
+
+        .expense-card h2 {
+            color: #dc2626;
+        }
+
+        .balance-card h2 {
+            color: #2563eb;
+        }
+
+
+        /* PROGRESS */
+
+        .section {
+            background: white;
+
+            border-radius: 18px;
+
+            border: 1px solid #eee;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,.05);
+
+            overflow: hidden;
+
+            margin-bottom: 25px;
+        }
+
+        .section-header {
+            padding: 22px 25px;
+
+            border-bottom:
+                1px solid #f0f0f0;
+        }
+
+        .section-header h3 {
+            color: #312e81;
+            font-size: 18px;
+        }
+
+        .section-header p {
+            color: #9ca3af;
+            font-size: 12px;
+
+            margin-top: 5px;
+        }
+
+
+        /* MONTH */
+
+        .month-list {
+            padding: 10px 25px 25px;
+        }
+
+        .month-row {
+            padding: 20px 0;
+
+            border-bottom:
+                1px solid #f1f1f1;
+        }
+
+        .month-row:last-child {
+            border-bottom: none;
+        }
+
+        .month-top {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 10px;
+        }
+
+        .month-name {
+            font-weight: bold;
+
+            color: #374151;
+        }
+
+        .month-values {
+            display: flex;
+
+            gap: 18px;
+
+            font-size: 12px;
+        }
+
+        .income-text {
+            color: #16a34a;
+            font-weight: bold;
+        }
+
+        .expense-text {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+
+        /* BAR */
+
+        .bar-container {
+            width: 100%;
+
+            height: 12px;
+
+            background: #f1f5f9;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            display: flex;
+        }
+
+        .income-bar {
+            background: #22c55e;
+
+            height: 100%;
+
+            transition: width .5s;
+        }
+
+        .expense-bar {
+            background: #ef4444;
+
+            height: 100%;
+
+            transition: width .5s;
+        }
+
+
+        /* LEGEND */
+
+        .legend {
+            display: flex;
+
+            gap: 25px;
+
+            padding: 20px 25px;
+
+            border-top:
+                1px solid #eee;
+
+            font-size: 12px;
+
+            color: #6b7280;
+        }
+
+        .legend-item {
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+
+            border-radius: 50%;
+        }
+
+        .green {
+            background: #22c55e;
+        }
+
+        .red {
+            background: #ef4444;
+        }
+
+
+        /* EMPTY */
+
+        .empty {
+            text-align: center;
+
+            padding: 60px 20px;
+
+            color: #9ca3af;
+        }
+
+        .empty-icon {
+            font-size: 45px;
+
+            margin-bottom: 12px;
+        }
+
+        .empty h3 {
+            color: #4b5563;
+
+            margin-bottom: 7px;
+        }
+
+
+        /* MOBILE */
+
+        @media (max-width: 850px) {
+
+            .sidebar {
+                position: relative;
+
+                width: 100%;
+                height: auto;
+
+                padding: 18px;
+            }
+
+            .logo {
+                margin-bottom: 15px;
+            }
+
+            .logo-icon {
+                display: none;
+            }
+
+            .menu {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .menu-title {
+                display: none;
+            }
+
+            .menu a {
+                padding: 9px 11px;
+                font-size: 12px;
+            }
+
+            .logout {
+                margin-top: 15px;
+            }
+
+            .main {
+                margin-left: 0;
+
+                padding: 25px 18px;
+            }
+
+            .summary {
+                grid-template-columns: 1fr;
+            }
+        }
+
+
+        @media (max-width: 600px) {
+
+            .top {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+            .user {
+                width: 100%;
+
+                text-align: center;
+            }
+
+            .month-top {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 8px;
+            }
+
+            .month-values {
+                gap: 10px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            💕
+        </div>
+
+        <h1>
+            Our Expenses
+        </h1>
+
+        <p>
+            Couple Expense Tracker
+        </p>
+
+    </div>
+
+
+    <nav class="menu">
+
+        <div class="menu-title">
+            Main Menu
+        </div>
+
+        <a href="{% url 'dashboard' %}">
+            🏠
+            <span>Dashboard</span>
+        </a>
+
+        <a href="{% url 'expenses' %}">
+            💸
+            <span>Expenses</span>
+        </a>
+
+        <a href="{% url 'add_expense' %}">
+            ➕
+            <span>Add Expense</span>
+        </a>
+
+        <div class="menu-title">
+            Income
+        </div>
+
+        <a href="{% url 'income' %}">
+            💰
+            <span>Income</span>
+        </a>
+
+        <a href="{% url 'add_income' %}">
+            ➕
+            <span>Add Income</span>
+        </a>
+
+        <div class="menu-title">
+            Reports
+        </div>
+
+        <a
+            href="{% url 'monthly_progress' %}"
+            class="active"
+        >
+            📊
+            <span>Monthly Progress</span>
+        </a>
+
+    </nav>
+
+
+    <div class="logout">
+
+        <a href="{% url 'logout' %}">
+            🚪 Logout
+        </a>
+
+    </div>
+
+</aside>
+
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+
+    <!-- HEADER -->
+
+    <div class="top">
+
+        <div class="page-title">
+
+            <h2>
+                📊 Monthly Progress
+            </h2>
+
+            <p>
+                Compare your income and expenses ❤️
+            </p>
+
+        </div>
+
+
+        <div class="user">
+
+            👤 {{ request.user.username }}
+
+        </div>
+
+    </div>
+
+
+
+    {% if monthly_data %}
+
+
+    <!-- =================================================
+         SUMMARY
+    ================================================== -->
+
+    <div class="summary">
+
+        <div class="card income-card">
+
+            <p>
+                💚 Total Income
+            </p>
+
+            <h2>
+                ₹{{ total_income|default:"0" }}
+            </h2>
+
+        </div>
+
+
+        <div class="card expense-card">
+
+            <p>
+                ❤️ Total Expenses
+            </p>
+
+            <h2>
+                ₹{{ total_expenses|default:"0" }}
+            </h2>
+
+        </div>
+
+
+        <div class="card balance-card">
+
+            <p>
+                💙 Current Balance
+            </p>
+
+            <h2>
+                ₹{{ total_balance|default:"0" }}
+            </h2>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         MONTHLY PROGRESS
+    ================================================== -->
+
+    <div class="section">
+
+
+        <div class="section-header">
+
+            <h3>
+                📈 Last 6 Months
+            </h3>
+
+            <p>
+                Green represents income · Red represents expenses
+            </p>
+
+        </div>
+
+
+        <div class="month-list">
+
+
+            {% for month in monthly_data %}
+
+
+            <div class="month-row">
+
+
+                <div class="month-top">
+
+                    <div class="month-name">
+
+                        📅 {{ month.month }}
+
+                    </div>
+
+
+                    <div class="month-values">
+
+                        <span class="income-text">
+                            Income:
+                            ₹{{ month.income }}
+                        </span>
+
+                        <span class="expense-text">
+                            Expense:
+                            ₹{{ month.expense }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BAR -->
+
+                <div class="bar-container">
+
+
+                    {% if month.income or month.expense %}
+
+                        {% if month.income >= month.expense %}
+
+                            <div
+                                class="income-bar"
+                                style="
+                                    width:
+                                    {% widthratio month.income month.income|add:month.expense 100 %}%;
+                                "
+                            ></div>
+
+                            <div
+                                class="expense-bar"
+                                style="
+                                    width:
+                                    {% widthratio month.expense month.income|add:month.expense 100 %}%;
+                                "
+                            ></div>
+
+                        {% else %}
+
+                            <div
+                                class="expense-bar"
+                                style="
+                                    width:
+                                    {% widthratio month.expense month.income|add:month.expense 100 %}%;
+                                "
+                            ></div>
+
+                            <div
+                                class="income-bar"
+                                style="
+                                    width:
+                                    {% widthratio month.income month.income|add:month.expense 100 %}%;
+                                "
+                            ></div>
+
+                        {% endif %}
+
+                    {% else %}
+
+                        <div
+                            style="
+                                width:100%;
+                                height:100%;
+                                background:#e5e7eb;
+                            "
+                        ></div>
+
+                    {% endif %}
+
+
+                </div>
+
+
+            </div>
+
+
+            {% endfor %}
+
+
+        </div>
+
+
+        <!-- LEGEND -->
+
+        <div class="legend">
+
+            <div class="legend-item">
+
+                <span class="dot green"></span>
+
+                Income
+
+            </div>
+
+
+            <div class="legend-item">
+
+                <span class="dot red"></span>
+
+                Expenses
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    {% else %}
+
+
+    <div class="section">
+
+        <div class="empty">
+
+            <div class="empty-icon">
+                📊
+            </div>
+
+            <h3>
+                No monthly data yet
+            </h3>
+
+            <p>
+                Add some income or expenses to see your progress.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    {% endif %}
+
+
+</main>
+
+
+</body>
+
+</html>
