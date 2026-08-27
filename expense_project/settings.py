@@ -1,3 +1,4 @@
+
 """
 Django settings for expense_project project.
 """
@@ -23,6 +24,7 @@ SECRET_KEY = "django-insecure-change-this-local-key"
 # DEBUG
 # ============================================================
 
+# Use False on PythonAnywhere/production
 DEBUG = False
 
 
@@ -30,11 +32,19 @@ DEBUG = False
 # ALLOWED HOSTS
 # ============================================================
 
-
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "suryap.pythonanywhere.com",
+]
+
+
+# ============================================================
+# CSRF
+# ============================================================
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://suryap.pythonanywhere.com",
 ]
 
 
@@ -119,16 +129,18 @@ WSGI_APPLICATION = "expense_project.wsgi.application"
 # ============================================================
 # DATABASE
 # ============================================================
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "expense_tracker",
-        "USER": "postgres",
+        "USER": "surya",
         "PASSWORD": "surya8075",
         "HOST": "localhost",
         "PORT": "5432",
     }
 }
+
 
 # ============================================================
 # PASSWORD VALIDATION
@@ -136,27 +148,31 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME":
+        "NAME": (
             "django.contrib.auth.password_validation."
-            "UserAttributeSimilarityValidator",
+            "UserAttributeSimilarityValidator"
+        ),
     },
 
     {
-        "NAME":
+        "NAME": (
             "django.contrib.auth.password_validation."
-            "MinimumLengthValidator",
+            "MinimumLengthValidator"
+        ),
     },
 
     {
-        "NAME":
+        "NAME": (
             "django.contrib.auth.password_validation."
-            "CommonPasswordValidator",
+            "CommonPasswordValidator"
+        ),
     },
 
     {
-        "NAME":
+        "NAME": (
             "django.contrib.auth.password_validation."
-            "NumericPasswordValidator",
+            "NumericPasswordValidator"
+        ),
     },
 ]
 
