@@ -30,9 +30,11 @@ DEBUG = True
 # ALLOWED HOSTS
 # ============================================================
 
+
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
+    "suryap.pythonanywhere.com",
 ]
 
 
