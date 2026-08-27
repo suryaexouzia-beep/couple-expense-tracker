@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -66,7 +67,221 @@
             background: #c4b5fd;
             border-radius: 10px;
         }
+/* =====================================================
+   MOBILE RESPONSIVE
+===================================================== */
 
+@media (max-width: 600px) {
+
+    body {
+        overflow: auto;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+        position: relative;
+
+        width: 100%;
+        height: auto;
+
+        padding: 15px 12px;
+
+        overflow: visible;
+    }
+
+    .logo {
+        margin-bottom: 15px;
+    }
+
+    .logo h1 {
+        font-size: 20px;
+    }
+
+    .logo p {
+        font-size: 11px;
+    }
+
+    /* MENU */
+
+    .menu {
+        display: grid;
+
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 8px;
+    }
+
+    .menu a {
+        padding: 10px 8px;
+
+        text-align: center;
+
+        font-size: 13px;
+    }
+
+    /* LOGOUT */
+
+    .logout {
+        margin-top: 12px;
+
+        padding-top: 0;
+    }
+
+    .logout a {
+        padding: 10px;
+    }
+
+    /* MAIN */
+
+    .main {
+        position: relative;
+
+        left: 0;
+        top: 0;
+
+        width: 100%;
+        height: auto;
+
+        padding: 15px;
+
+        overflow: visible;
+    }
+
+    /* TOP */
+
+    .top {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 12px;
+
+        margin-bottom: 20px;
+    }
+
+    .top h2 {
+        font-size: 24px;
+    }
+
+    .top p {
+        font-size: 13px;
+    }
+
+    .user {
+        width: 100%;
+
+        text-align: center;
+
+        padding: 10px;
+    }
+
+    /* SUMMARY CARDS */
+
+    .cards {
+        display: grid;
+
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+
+        margin-bottom: 20px;
+    }
+
+    .card {
+        width: 100%;
+
+        min-height: 110px;
+
+        padding: 20px;
+    }
+
+    .amount {
+        font-size: 26px;
+    }
+
+    /* MONTHLY SECTIONS */
+
+    .grid {
+        display: grid;
+
+        grid-template-columns: 1fr;
+
+        gap: 15px;
+
+        margin-bottom: 15px;
+    }
+
+    .section {
+        width: 100%;
+
+        padding: 18px;
+
+        margin-bottom: 15px;
+
+        overflow: hidden;
+    }
+
+    .section h3 {
+        font-size: 17px;
+    }
+
+    /* PROGRESS */
+
+    .progress-info {
+        font-size: 13px;
+    }
+
+    .progress-text {
+        font-size: 12px;
+    }
+
+    /* CHART */
+
+    .chart {
+        height: 200px;
+
+        padding-top: 10px;
+
+        overflow-x: auto;
+
+        justify-content: flex-start;
+
+        gap: 18px;
+    }
+
+    .bar-container {
+        min-width: 30px;
+    }
+
+    .bar {
+        width: 28px;
+    }
+
+    .bar-label {
+        font-size: 11px;
+    }
+
+    /* TRANSACTIONS */
+
+    .transactions {
+        display: block;
+
+        width: 100%;
+
+        overflow-x: auto;
+
+        white-space: nowrap;
+
+        font-size: 12px;
+    }
+
+    .transactions th,
+    .transactions td {
+        padding: 9px;
+    }
+
+}
         /* =====================================================
            LOGO
         ===================================================== */
