@@ -122,14 +122,11 @@ TEMPLATES = [
 # ============================================================
 # WSGI
 # ============================================================
-
 WSGI_APPLICATION = "expense_project.wsgi.application"
-
 
 # ============================================================
 # DATABASE
 # ============================================================
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -228,7 +225,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # LOGIN / LOGOUT
 # ============================================================
 
-LOGIN_URL = "login"
+
 
 LOGIN_REDIRECT_URL = "dashboard"
 
