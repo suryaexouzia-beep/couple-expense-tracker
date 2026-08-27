@@ -23,7 +23,7 @@ SECRET_KEY = "django-insecure-change-this-local-key"
 # DEBUG
 # ============================================================
 
-DEBUG = True
+DEBUG = False
 
 
 # ============================================================
